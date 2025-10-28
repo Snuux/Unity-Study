@@ -6,7 +6,7 @@ public class GameState : MonoBehaviour
 {
     [SerializeField] CountdownTimer _timer;
     [SerializeField] CoinsManager _coinsManager;
-    [SerializeField] PlayerMovement _playerMovement;
+    [SerializeField] RigidbodyMovement _playerMovement;
 
     public bool IsDebugWin { get; set; }
     public bool IsDebugLose { get; set; }

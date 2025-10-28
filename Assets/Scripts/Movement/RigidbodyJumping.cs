@@ -1,7 +1,7 @@
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class PlayerJumping : MonoBehaviour
+public class RigidbodyJumping : MonoBehaviour
 {
     private const KeyCode JumpKey = KeyCode.Space;
 

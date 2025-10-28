@@ -1,30 +1,25 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.EventSystems;
 
-[RequireComponent(typeof(PlayerMovement))]
-[RequireComponent(typeof(PlayerJumping))]
-public class MoveParticles : MonoBehaviour
+[RequireComponent(typeof(RigidbodyMovement))]
+[RequireComponent(typeof(RigidbodyJumping))]
+public class DirtParticles : MonoBehaviour
 {
-    private PlayerMovement _playerMovement;
-    private PlayerJumping _playerJumping;
+    private RigidbodyMovement _playerMovement;
+    private RigidbodyJumping _playerJumping;
 
     [SerializeField] private ParticleSystem _particleSystem;
-    [SerializeField] private Vector3 _particleSystemOffset;
 
     [SerializeField] private float _minSpeedToPlayParticleSystem;
 
     private void Awake()
     {
-        _playerMovement = GetComponent<PlayerMovement>();
-        _playerJumping = GetComponent<PlayerJumping>();
+        _playerMovement = GetComponent<RigidbodyMovement>(); 
+        _playerJumping = GetComponent<RigidbodyJumping>();
     }
 
     private void Update()
     {
-        _particleSystem.transform.position = _particleSystemOffset + _playerMovement.transform.position;
-        _particleSystem.transform.Rotate(_playerMovement.MoveDirection, Space.World);
+        //_particleSystem.transform.Rotate(_playerMovement.MoveDirection, Space.World);
 
         if (_playerJumping.IsGrounded == false || _playerMovement.Speed() < _minSpeedToPlayParticleSystem)
         {
