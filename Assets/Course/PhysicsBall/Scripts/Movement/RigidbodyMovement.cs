@@ -64,10 +64,10 @@ namespace Assets.Course.PhysicsBall
 
         public void ResetPosition()
         {
-            transform.position = _defaultPosition;
-            transform.rotation = _defaultRotation;
-
+            _rigidbody.isKinematic = true;
             _rigidbody.isKinematic = false;
+
+            _rigidbody.Move(_defaultPosition, _defaultRotation);
         }
 
         public void Stop()
