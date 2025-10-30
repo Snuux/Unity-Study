@@ -12,7 +12,7 @@ namespace Assets.Course.PhysicsBall
         {
             Vector3 newCameraPosition = _playerMovement.ForwardDirection * _cameraRotationOffset.z
                 + _playerMovement.transform.position + new Vector3(0, _cameraRotationOffset.y, 0);
-            transform.position = newCameraPosition;
+            transform.position = Vector3.Lerp(transform.position, newCameraPosition, _stepSpeed * Time.deltaTime);
 
             Vector3 directionCameraPlayer = (_playerMovement.transform.position - transform.position).normalized;
             Quaternion angleCameraPlayer = Quaternion.LookRotation(directionCameraPlayer, Vector3.up);

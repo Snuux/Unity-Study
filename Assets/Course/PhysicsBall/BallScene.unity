@@ -9501,7 +9501,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _playerMovement: {fileID: 1612908408}
   _cameraRotationOffset: {x: 0, y: 10, z: -15}
-  _stepSpeed: 100
+  _stepSpeed: 4
 --- !u!1 &1612908407
 GameObject:
   m_ObjectHideFlags: 0
