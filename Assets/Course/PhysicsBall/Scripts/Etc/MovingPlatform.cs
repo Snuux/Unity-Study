@@ -1,51 +1,40 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
-public class MovingPlatform : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    [SerializeField] private Transform _endPosition;
-    [SerializeField] private float _speed;
-
-    private Vector3 _startPosition;
-    private Vector3 _targetPosition;
-
-    private float _positionDelta = .05f;
-
-    private void Awake()
+    public class MovingPlatform : MonoBehaviour
     {
-        _startPosition = transform.position;
-        _targetPosition = _endPosition.position;
-    }
+        [SerializeField] private Transform _endPosition;
+        [SerializeField] private float _speed;
 
-    public void Update()
-    {
-        transform.position = Vector3.Slerp(transform.position, _targetPosition, _speed * Time.deltaTime);
+        private Vector3 _startPosition;
+        private Vector3 _targetPosition;
 
-        if ((transform.position - _targetPosition).magnitude <= _positionDelta)
-            ChangeTarget();
-    }
+        private float _positionDelta = .1f;
 
-    private void ChangeTarget()
-    {
-        Vector3 temp = _targetPosition;
-        _targetPosition = _startPosition;
-        _startPosition = temp;
-    }
+        private Rigidbody _rigidbody;
 
-    /* ? ??????? ??????? ????? rigidbody ??? ?? ?????????? ???????? ??????...
-     * private void OnCollisionStay(Collision collision)
-    {
-        PlayerMovement playerMovement = collision.gameObject.GetComponent<PlayerMovement>();
-
-        if (playerMovement != null)
+        private void Awake()
         {
-            Rigidbody playerRigidbody = playerMovement.GetComponent<Rigidbody>();
+            _startPosition = transform.position;
+            _targetPosition = _endPosition.position;
 
-            Vector3 newYVectorPlayer = playerRigidbody.position;
-            newYVectorPlayer.y += transform.position.y;
-
-            playerRigidbody.MovePosition(newYVectorPlayer);
+            _rigidbody = GetComponent<Rigidbody>();
         }
-    }*/
+
+        public void FixedUpdate()
+        {
+            Vector3 direction = _targetPosition - transform.position;
+            _rigidbody.MovePosition(_rigidbody.position + direction.normalized * _speed * Time.fixedDeltaTime);
+
+            if (direction.magnitude <= _positionDelta)
+                ChangeTarget();
+        }
+
+        private void ChangeTarget()
+        {
+            Vector3 temp = _targetPosition;
+            _targetPosition = _startPosition;
+            _startPosition = temp;
+        }
+    }
 }

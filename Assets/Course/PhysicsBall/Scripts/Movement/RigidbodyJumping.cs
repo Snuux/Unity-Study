@@ -1,83 +1,75 @@
 using UnityEngine;
-
-[RequireComponent(typeof(Rigidbody))]
-public class RigidbodyJumping : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    private const KeyCode JumpKey = KeyCode.Space;
-
-    private Rigidbody _rigidbody;
-
-    [SerializeField] private float _jumpForce;
-    [SerializeField] private float _jumpGravity;
-
-    private bool _isJumpPressed;
-    private bool _isGrounded;
-
-    public bool IsJumpPressed => _isJumpPressed;
-    public bool IsGrounded => _isGrounded;
-
-    private void Awake()
+    [RequireComponent(typeof(Rigidbody))]
+    public class RigidbodyJumping : MonoBehaviour
     {
-        _rigidbody = GetComponent<Rigidbody>();
-    }
+        private Rigidbody _rigidbody;
 
-    private void Update()
-    {
-        if (Input.GetKeyDown(JumpKey))
-            _isJumpPressed = true;
+        [SerializeField] private float _jumpForce;
+        [SerializeField] private float _jumpGravity;
 
-        DebugDrawVectors();
-    }
+        public bool IsJumpPressed { get; set; }
+        public bool IsGrounded { get; private set; }
 
-    private void FixedUpdate()
-    {
-        JumpProcess();
-        FallProcess();
-    }
-
-    private void JumpProcess()
-    {
-        if (_isJumpPressed && _isGrounded)
+        private void Awake()
         {
-            _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
-            _isJumpPressed = false;
+            _rigidbody = GetComponent<Rigidbody>();
         }
-    }
 
-    private void FallProcess()
-    {
-        if (_isGrounded == false)
+        private void Update()
         {
-            _rigidbody.AddForce(-Vector3.up * _jumpGravity, ForceMode.Acceleration);
+            DebugDrawVectors();
         }
-    }
 
-    void OnCollisionEnter(Collision collision)
-    {
-        SetGrounded(collision, true);
-    }
+        private void FixedUpdate()
+        {
+            JumpProcess();
+            MoreGravity();
+        }
 
-    void OnCollisionStay(Collision collision)
-    {
-        SetGrounded(collision, true);
-    }
+        private void JumpProcess()
+        {
+            if (IsJumpPressed && IsGrounded)
+            {
+                _rigidbody.AddForce(Vector3.up * _jumpForce, ForceMode.Impulse);
+                IsJumpPressed = false;
+            }
+        }
 
-    void OnCollisionExit(Collision collision)
-    {
-        SetGrounded(collision, false);
-    }
+        private void MoreGravity()
+        {
+            if (IsGrounded == false)
+                _rigidbody.AddForce(-Vector3.up * _jumpGravity, ForceMode.Force);
+        }
 
-    void SetGrounded(Collision collision, bool shouldBeGrounded)
-    {
-        if (collision.gameObject.GetComponent<CollisionChecker>() != null)
-            _isGrounded = shouldBeGrounded;
-    }
+        private void OnCollisionEnter(Collision collision)
+        {
+            SetGrounded(collision, true);
+        }
 
-    void DebugDrawVectors()
-    {
-        float debugVectorsRadius = 3;
+        private void OnCollisionStay(Collision collision)
+        {
+            SetGrounded(collision, true);
+        }
 
-        if (_isJumpPressed || !_isGrounded)
-            Debug.DrawRay(transform.position, Vector3.up * debugVectorsRadius, Color.red);
+        private void OnCollisionExit(Collision collision)
+        {
+            SetGrounded(collision, false);
+        }
+
+        private void SetGrounded(Collision collision, bool shouldBeGrounded)
+        {
+            if (collision.gameObject.GetComponent<Ground>() != null)
+                IsGrounded = shouldBeGrounded;
+        }
+
+        private void DebugDrawVectors()
+        {
+            float debugVectorsRadius = 3;
+
+            if (IsJumpPressed || !IsGrounded)
+                Debug.DrawRay(transform.position, Vector3.up * debugVectorsRadius, Color.red);
+        }
     }
 }

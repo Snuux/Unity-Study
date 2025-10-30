@@ -1,14 +1,17 @@
 using UnityEngine;
 
-public class Coin : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    private void OnTriggerEnter(Collider other)
+    public class Coin : MonoBehaviour
     {
-        Player player = other.GetComponent<Player>();
-
-        if (player != null)
+        public void Disable()
         {
             gameObject.SetActive(false);
         }
+
+        public void Enable()
+        {
+            gameObject.SetActive(true);
+        }
     }
-}
+}   

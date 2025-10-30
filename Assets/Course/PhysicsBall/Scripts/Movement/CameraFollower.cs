@@ -1,33 +1,22 @@
 using UnityEngine;
 
-[RequireComponent(typeof(RigidbodyMovement))]
-public class CameraFollower : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    private RigidbodyMovement _playerMovement;
-
-    [SerializeField] private Transform _camera;
-    [SerializeField] private Vector3 _cameraRotationOffset;
-
-    [SerializeField] private float _stepSpeed;
-
-    private void Awake()
+    public class CameraFollower : MonoBehaviour
     {
-        _playerMovement = GetComponent<RigidbodyMovement>();    
-    }
+        [SerializeField] private RigidbodyMovement _playerMovement;
+        [SerializeField] private Vector3 _cameraRotationOffset;
+        [SerializeField] private float _stepSpeed;
 
-    private void LateUpdate()
-    {
-        Vector3 newCameraPosition = _playerMovement.ForwardDirection * _cameraRotationOffset.z
-            + transform.position + new Vector3(0, _cameraRotationOffset.y, 0);
-        _camera.position = newCameraPosition;
-        //Vector3.Lerp(_camera.position, newCameraPosition, _stepSpeed * Time.deltaTime);
+        private void LateUpdate()
+        {
+            Vector3 newCameraPosition = _playerMovement.ForwardDirection * _cameraRotationOffset.z
+                + _playerMovement.transform.position + new Vector3(0, _cameraRotationOffset.y, 0);
+            transform.position = newCameraPosition;
 
-        Vector3 directionCameraPlayer = (transform.position - _camera.position).normalized;
-        Quaternion angleCameraPlayer = Quaternion.LookRotation(directionCameraPlayer, Vector3.up);
-        _camera.rotation = angleCameraPlayer; //Quaternion.RotateTowards(_camera.rotation, angleCameraPlayer, _stepSpeed * Time.deltaTime);
-        //_camera.rotation = Quaternion.Lerp(_camera.rotation, angleCameraPlayer, _stepSpeed * Time.deltaTime);
-
-        //Debug.DrawRay(_camera.position, _camera.rotation.eulerAngles.normalized * 5, Color.cyan);
-        //Debug.DrawRay(_camera.position, directionFromCameraToHero * 7, Color.green);
+            Vector3 directionCameraPlayer = (_playerMovement.transform.position - transform.position).normalized;
+            Quaternion angleCameraPlayer = Quaternion.LookRotation(directionCameraPlayer, Vector3.up);
+            transform.rotation = angleCameraPlayer;
+        }
     }
 }

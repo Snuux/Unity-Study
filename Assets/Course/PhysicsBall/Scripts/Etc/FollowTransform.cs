@@ -1,22 +1,22 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class FollowTransform : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    [SerializeField] private Transform _source;   
-    [SerializeField] private Vector3 _offset;
-    [SerializeField] private bool useTransform;
-    [SerializeField] private bool useRotation;
-
-    private void LateUpdate()
+    public class FollowTransform : MonoBehaviour
     {
-        if (useTransform)
-        {
-            transform.position = _source.position + _offset;
-        }
+        [SerializeField] private Transform _source;
+        [SerializeField] private Vector3 _offset;
 
-        if (useRotation)
-            transform.rotation = _source.rotation;
+        [SerializeField] private bool useTransform;
+        [SerializeField] private bool useRotation;
+
+        private void LateUpdate()
+        {
+            if (useTransform)
+                transform.position = _source.position + _offset;
+
+            if (useRotation)
+                transform.rotation = _source.rotation;
+        }
     }
 }

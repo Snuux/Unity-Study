@@ -1,31 +1,42 @@
 using UnityEngine;
 
-public class CountdownTimer : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    [SerializeField] private float _countdownSeconds;
-    private float _currentTime = 0;
-
-    public float CurrentTime => _currentTime;
-
-    private void Awake()
+    public class CountdownTimer : MonoBehaviour
     {
-        _currentTime = _countdownSeconds;
+        [SerializeField] private float _targetTime;
+        private bool _isPaused;
+
+        public float CurrentTime { get; private set; }
+
+        private void Awake()
+        {
+            CurrentTime = _targetTime;
+            _isPaused = false;
+        }
+
+        private void Update()
+        {
+            ProcessTimer();
+        }
+
+        private void ProcessTimer()
+        {
+            if (_isPaused == false)
+            {
+                if (CurrentTime > 0)
+                    CurrentTime -= Time.deltaTime;
+                else
+                    CurrentTime = 0;
+            }
+        }
+
+        public bool IsOver() => CurrentTime <= 0;
+
+        public void ResetTimer() => CurrentTime = _targetTime;
+
+        public void Pause() => _isPaused = true;
+
+        public void Continue() => _isPaused = false;
     }
-
-    private void Update()
-    {
-        ProcessTimer();
-    }
-
-    private void ProcessTimer()
-    {
-        if (_currentTime > 0)
-            _currentTime -= Time.deltaTime;
-        else
-            _currentTime = 0;
-    }
-
-    public bool IsOver() => _currentTime <= 0;
-
-    public void ResetTimer() => _currentTime = _countdownSeconds;
 }

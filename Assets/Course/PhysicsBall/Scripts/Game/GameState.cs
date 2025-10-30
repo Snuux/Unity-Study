@@ -1,53 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class GameState : MonoBehaviour
+namespace Assets.Course.PhysicsBall
 {
-    [SerializeField] CountdownTimer _timer;
-    [SerializeField] CoinsManager _coinsManager;
-    [SerializeField] RigidbodyMovement _playerMovement;
-
-    public bool IsDebugWin { get; set; }
-    public bool IsDebugLose { get; set; }
-
-    void Update()
+    public class GameState : MonoBehaviour
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        [SerializeField] CountdownTimer _timer;
+        [SerializeField] RigidbodyMovement _playerMovement;
+        [SerializeField] PlayerController _playerController;
+
+        [SerializeField] CoinsWallet _coinsWallet;
+        [SerializeField] CoinsHolder _coinsHolder;
+
+        public bool IsDebugWin { get; set; }
+        public bool IsDebugLose { get; set; }
+
+        void Update()
         {
-            RestartGame();
+            if (Input.GetKeyDown(KeyCode.F))
+                RestartGame();
+
+            if (Input.GetKeyDown(KeyCode.V))
+                IsDebugWin = true;
+
+            if (Input.GetKeyDown(KeyCode.L))
+                IsDebugLose = true;
+
+            if (IsWin() || IsLose())
+                PauseGame();
         }
 
-        if (Input.GetKeyDown(KeyCode.V))
-            IsDebugWin = true;
+        private void RestartGame()
+        {
+            _timer.ResetTimer();
+            _timer.Continue();
 
-        if (Input.GetKeyDown(KeyCode.L))
-            IsDebugLose = true;
-    }
+            _coinsHolder.ResetCoinsCount();
+            _coinsHolder.ResetCoins();
+            _coinsWallet.ResetCoinsCount();
 
-    private void RestartGame()
-    {
-        _timer.ResetTimer();
-        _coinsManager.ResetCoins();
-        _playerMovement.ResetPosition();
+            _playerMovement.ResetPosition();
+            _playerController.IsPaused = false;
 
-        IsDebugWin = false;
-        IsDebugLose = false;
-    }
+            IsDebugWin = false;
+            IsDebugLose = false;
+        }
 
-    public bool IsWin()
-    {
-        if (_coinsManager.IsAllCoinsPicked() || IsDebugWin)
-            return true;
-        else
-            return false;
-    }
+        public bool IsWin()
+        {
+            if (IsAllCoinsPicked() || IsDebugWin)
+                return true;
+            else
+                return false;
+        }
 
-    public bool IsLose()
-    {
-        if (_timer.IsOver() || IsDebugLose)
-            return true;
-        else
-            return false;
+        public bool IsLose()
+        {
+            if (_timer.IsOver() || IsDebugLose)
+                return true;
+            else
+                return false;
+        }
+
+        public bool IsAllCoinsPicked() => _coinsWallet.Count == _coinsHolder.Count;
+
+        public void PauseGame()
+        {
+            _timer.Pause();
+            _playerController.IsPaused = true;
+            _playerMovement.Stop();
+        }
     }
 }
